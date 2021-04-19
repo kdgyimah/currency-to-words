@@ -1,7 +1,12 @@
-import {  oneDigit,  twoDigits,  threeDigits,  GetNumericGroupTitle} from "./converter.jsx";
+import {
+  oneDigit,
+  twoDigits,
+  threeDigits,
+  GetNumericGroupTitle,
+} from "./converter.js";
 
 const convertToWords = (currency) => {
-  if (currency !=0 && !currency) return "invalid input";
+  if (currency != 0 && !currency) return "invalid input";
 
   let numericGroup = 1; // thousands , millions
   let result = "";
@@ -17,7 +22,9 @@ const convertToWords = (currency) => {
 
       if (tempResult)
         //for numbers like 1,000,001 that thousands part is empty
-        result = `${tempResult} ${GetNumericGroupTitle(numericGroup)} ${result}`.trim();
+        result = `${tempResult} ${GetNumericGroupTitle(
+          numericGroup,
+        )} ${result}`.trim();
 
       currency = Math.floor(currency / 1000);
       numericGroup++;
@@ -28,31 +35,39 @@ const convertToWords = (currency) => {
   }
 };
 
-const completeDollarWords = (dollars, dollarAmountWord = "dollar") => {
-  if (!dollars) dollars = "zero";
-  return dollars + (dollars === "one" ? ` ${dollarAmountWord}` : ` ${dollarAmountWord}s`);
+const completeBigCurrencyWords = (amount, amountWord = "Ghana Cedi") => {
+  if (!amount) amount = "zero";
+  return amount + (amount === "one" ? ` ${amountWord}` : ` ${amountWord}s`);
 };
 
-const completeCentsWords = (cents, centAmountWord = "cent") => {
-  if (!cents) return "";
-  return ` and ${cents} ` + (cents === "one" ? `${centAmountWord}` : `${centAmountWord}s`);
+const completeLowCurrencyWords = (amount, amountWord = "pesewa") => {
+  if (!amount) return "";
+  return (
+    `, and ${amount} ` + (amount === "one" ? `${amountWord}` : `${amountWord}s`)
+  );
 };
 
-export const CurrencyToWords = (value, dollarText = "dollar", centText = "cent") => {
-  
+export const CurrencyToWords = (
+  value,
+  bigCurrency = "Ghana Cedi",
+  lowCurrency = "pesewa",
+) => {
   const currency = (value + "").replace(" ", "").split(".");
 
-  const dollarInWords = convertToWords(Number.parseInt(currency[0]));
-  const centsInWords =
+  const bigCurrencyInWords = convertToWords(Number.parseInt(currency[0]));
+  const lowCurrencyInWords =
     currency.length == 2
       ? convertToWords(
           Number.parseInt(
-            currency[1].length == 1 ? `${currency[1]}0` : currency[1]
-          )
+            currency[1].length == 1 ? `${currency[1]}0` : currency[1],
+          ),
         )
       : "";
 
-  return completeDollarWords(dollarInWords, dollarText) + completeCentsWords(centsInWords, centText);
+  return (
+    completeBigCurrencyWords(bigCurrencyInWords, bigCurrency) +
+    completeLowCurrencyWords(lowCurrencyInWords, lowCurrency)
+  );
 };
 
 export default CurrencyToWords;

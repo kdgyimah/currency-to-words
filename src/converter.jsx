@@ -74,7 +74,12 @@ export const threeDigits = (threeDigits) => {
   const firstPart = oneDigit(Math.floor(threeDigits / 100)) + " hundred ";
   const secondPart = threeDigits % 100;
   return (
-    firstPart + (secondPart > 9 ? twoDigits(secondPart) : oneDigit(secondPart))
+    firstPart +
+    (secondPart > 9
+      ? " and " + twoDigits(secondPart)
+      : secondPart > 0
+      ? " and " + oneDigit(secondPart)
+      : oneDigit(secondPart))
   ); //for numbers like 101
 };
 
@@ -94,5 +99,5 @@ export default {
   oneDigit,
   twoDigits,
   threeDigits,
-  GetNumericGroupTitle
+  GetNumericGroupTitle,
 };
