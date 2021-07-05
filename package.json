@@ -19,7 +19,9 @@
   },
   "license": "MIT",
   "private": false,
-  "dependencies": {},
+  "dependencies": {
+    "prop-types": "^15.7.2"
+  },
   "scripts": {
     "build": "webpack"
   },

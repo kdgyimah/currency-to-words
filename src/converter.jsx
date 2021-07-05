@@ -76,9 +76,7 @@ export const threeDigits = (threeDigits) => {
   return (
     firstPart +
     (secondPart > 9
-      ? " and " + twoDigits(secondPart)
-      : secondPart > 0
-      ? " and " + oneDigit(secondPart)
+      ? twoDigits(secondPart)
       : oneDigit(secondPart))
   ); //for numbers like 101
 };
@@ -95,9 +93,11 @@ export const GetNumericGroupTitle = (numericGroup) => {
   }
 };
 
-export default {
+const converter = {
   oneDigit,
   twoDigits,
   threeDigits,
   GetNumericGroupTitle,
 };
+
+export default converter;

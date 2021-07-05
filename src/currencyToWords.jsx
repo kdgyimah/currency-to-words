@@ -3,16 +3,40 @@ import {
   twoDigits,
   threeDigits,
   GetNumericGroupTitle,
-} from "./converter.js";
+} from "./converter.jsx";
+import PropTypes from "prop-types";
+
+/**
+ * props definition
+ */
+const propTypes = {
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  bigCurrency: PropTypes.string,
+  lowCurrency: PropTypes.string,
+};
+
+const defaultProps = {
+  bigCurrency: "Ghana Cedi",
+  lowCurrency: "pesewa",
+};
+
+/**
+ *
+ * @param {Number || String} value amount to convert
+ * @param {String} bigCurrency name of Big denomination of currency
+ * @param {String} lowCurrency name of smaller denomination of currency
+ * @returns {String} Currency conversion to words
+ */
+
 
 const convertToWords = (currency) => {
-  if (currency != 0 && !currency) return "invalid input";
+  if (Number(currency) !== 0 && !currency) return "invalid input";
 
   let numericGroup = 1; // thousands , millions
   let result = "";
 
   try {
-    while (currency != 0) {
+    while (Number(currency) !== 0) {
       let tempResult = "";
       let remain = currency % 1000;
 
@@ -22,9 +46,7 @@ const convertToWords = (currency) => {
 
       if (tempResult)
         //for numbers like 1,000,001 that thousands part is empty
-        result = `${tempResult} ${GetNumericGroupTitle(
-          numericGroup,
-        )} ${result}`.trim();
+        result = `${tempResult} ${GetNumericGroupTitle(numericGroup)} ${result}`.trim();
 
       currency = Math.floor(currency / 1000);
       numericGroup++;
@@ -47,14 +69,15 @@ const completeLowCurrencyWords = (amount, amountWord = "pesewa") => {
   );
 };
 
-export const CurrencyToWords = (
+export const CurrencyToWords = ({
   value,
   bigCurrency = "Ghana Cedi",
   lowCurrency = "pesewa",
-) => {
+}) => {
   const currency = (value + "").replace(" ", "").split(".");
 
   const bigCurrencyInWords = convertToWords(Number.parseInt(currency[0]));
+  /* eslint eqeqeq: 0 */
   const lowCurrencyInWords =
     currency.length == 2
       ? convertToWords(
@@ -69,5 +92,8 @@ export const CurrencyToWords = (
     completeLowCurrencyWords(lowCurrencyInWords, lowCurrency)
   );
 };
+
+CurrencyToWords.propTypes = propTypes;
+CurrencyToWords.defaultProps = defaultProps;
 
 export default CurrencyToWords;
